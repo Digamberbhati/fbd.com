@@ -18,6 +18,11 @@ export default function Booking() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error" | ""; text: string }>({
+    type: "",
+    text: "",
+  })
+
   const WEB3FORMS_ACCESS_KEY = "9a8b054f-2aed-4028-976b-e1025b966253"
 
   const handleChange = (
@@ -30,6 +35,7 @@ export default function Booking() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setStatusMessage({ type: "", text: "" }) // reset message
 
     const submissionData = {
       access_key: WEB3FORMS_ACCESS_KEY,
@@ -53,7 +59,7 @@ export default function Booking() {
       const result = await response.json()
 
       if (result.success) {
-        alert("Thank you! Your booking request has been sent.")
+        setStatusMessage({ type: "success", text: "✅ Thank you! Your booking request has been sent." })
         setFormData({
           name: "",
           email: "",
@@ -64,11 +70,11 @@ export default function Booking() {
           specialRequests: "",
         })
       } else {
-        alert("Failed! Please try again.")
+        setStatusMessage({ type: "error", text: "❌ Failed! Please try again." })
       }
     } catch (error) {
       console.error("Error:", error)
-      alert("Failed! Please try again.")
+      setStatusMessage({ type: "error", text: "❌ Failed! Please try again." })
     } finally {
       setIsSubmitting(false)
     }
@@ -88,6 +94,7 @@ export default function Booking() {
       <Header />
 
       <main className="min-h-screen">
+        {/* Hero */}
         <section className="bg-gradient-to-b from-primary/10 to-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-5xl md:text-6xl font-bold mb-4">Book Your Adventure</h1>
@@ -97,12 +104,14 @@ export default function Booking() {
           </div>
         </section>
 
+        {/* Booking Form */}
         <section className="py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white p-8 md:p-12 rounded-xl shadow-lg">
               <form onSubmit={handleSubmit} className="space-y-8">
                 <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
 
+                {/* Personal Info */}
                 <div>
                   <h2 className="text-2xl font-bold mb-6">Personal Information</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -135,6 +144,7 @@ export default function Booking() {
                   </div>
                 </div>
 
+                {/* Travel Details */}
                 <div>
                   <h2 className="text-2xl font-bold mb-6">Travel Details</h2>
                   <div className="space-y-6">
@@ -201,14 +211,15 @@ export default function Booking() {
                         onChange={handleChange}
                         className="w-full px-4 py-3 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
                       >
-                        {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                          <option key={n} value={n}>{n} {n===1?"Person":"People"}</option>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                          <option key={n} value={n}>{n} {n === 1 ? "Person" : "People"}</option>
                         ))}
                       </select>
                     </div>
                   </div>
                 </div>
 
+                {/* Special Requests */}
                 <div>
                   <label htmlFor="specialRequests" className="block text-sm font-medium mb-2">
                     Special Requests (Optional)
@@ -224,6 +235,7 @@ export default function Booking() {
                   />
                 </div>
 
+                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -241,6 +253,17 @@ export default function Booking() {
                     </>
                   )}
                 </button>
+
+                {/* ✅ Inline status message below button */}
+                {statusMessage.text && (
+                  <p
+                    className={`text-center mt-2 font-medium ${
+                      statusMessage.type === "success" ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {statusMessage.text}
+                  </p>
+                )}
               </form>
 
               <div className="mt-8 p-6 bg-primary/5 border border-primary/20 rounded-lg">

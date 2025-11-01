@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 export function Header() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -13,17 +14,25 @@ export function Header() {
     { href: "/packages", label: "Packages" },
     { href: "/contact", label: "Contact" },
     { href: "/booking", label: "Booking" },
-  ]
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-primary/20">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
-        >
-          FBDTravels
+        
+        {/* Logo with Larger Image (60px × 60px) */}
+        <Link href="/" className="flex items-center space-x-3">
+          <Image
+            src="/logo.PNG"
+            alt="FBDTravels Logo"
+            width={60}
+            height={60}
+            className="w-16 h-16 object-contain"
+            priority
+          />
+          <span className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            FBDTravels
+          </span>
         </Link>
 
         {/* Desktop Menu */}
@@ -67,5 +76,5 @@ export function Header() {
         </div>
       )}
     </header>
-  )
+  );
 }

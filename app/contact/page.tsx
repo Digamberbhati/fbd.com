@@ -14,8 +14,11 @@ export default function Contact() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error" | ""; text: string }>({
+    type: "",
+    text: "",
+  })
 
-  // Web3Forms API Key
   const WEB3FORMS_ACCESS_KEY = "9a8b054f-2aed-4028-976b-e1025b966253"
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -26,6 +29,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setStatusMessage({ type: "", text: "" }) // Reset message before submitting
 
     const submissionData = {
       access_key: WEB3FORMS_ACCESS_KEY,
@@ -45,14 +49,14 @@ export default function Contact() {
       const result = await response.json()
 
       if (result.success) {
-        alert("Thank you! Your message has been sent.")
+        setStatusMessage({ type: "success", text: "✅ Thank you! Your message has been sent." })
         setFormData({ name: "", email: "", message: "" })
       } else {
-        alert("Failed! Please try again.")
+        setStatusMessage({ type: "error", text: "❌ Failed! Please try again." })
       }
     } catch (error) {
       console.error("Error:", error)
-      alert("Failed! Please try again.")
+      setStatusMessage({ type: "error", text: "❌ Failed! Please try again." })
     } finally {
       setIsSubmitting(false)
     }
@@ -63,12 +67,12 @@ export default function Contact() {
       <Header />
 
       <main className="min-h-screen">
-        {/* Hero */}
+        {/* Hero Section */}
         <section className="bg-gradient-to-b from-primary/10 to-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-5xl md:text-6xl font-bold mb-4">Get In Touch</h1>
             <p className="text-xl text-foreground/70">
-              We&apos;d love to hear from you. Let&apos;s start your together.
+              We&apos;d love to hear from you. Let&apos;s start your journey together.
             </p>
           </div>
         </section>
@@ -168,6 +172,7 @@ export default function Contact() {
                     />
                   </div>
 
+                  {/* Submit Button */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -185,6 +190,17 @@ export default function Contact() {
                       </>
                     )}
                   </button>
+
+                  {/* ✅ Status Message below the button */}
+                  {statusMessage.text && (
+                    <p
+                      className={`text-center mt-2 font-medium ${
+                        statusMessage.type === "success" ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {statusMessage.text}
+                    </p>
+                  )}
                 </form>
               </div>
             </div>
