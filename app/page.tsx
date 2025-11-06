@@ -111,7 +111,7 @@ export default function Home() {
       locations,
       desc: "Beachfront boardroom, team-building yoga, private villa meetings, 5-star resort with WiFi & catering.",
       duration: "5 Days / 4 Nights",
-      img: "\packages\corporate-bali.jpg",
+      img: "/packages/corporate-bali.jpg",
     },
     {
       id: 4,
