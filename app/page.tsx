@@ -5,77 +5,532 @@ import { Footer } from "@/components/footer";
 import { Testimonials } from "@/components/testimonials";
 import { Marquee } from "@/components/marquee";
 import Link from "next/link";
-import { ArrowRight, MapPin, Users, Award, Star, Shield, Plane, Clock, CheckCircle } from "lucide-react";
+import {
+  ArrowRight,
+  Star,
+  Heart,
+  Users,
+  Briefcase,
+  Camera,
+  Moon,
+  User,
+  X,
+  Award,
+  Shield,
+  Plane,
+  Clock,
+  CheckCircle,
+  Calendar,
+  MapPin,
+  Phone,
+  Mail,
+  MessageSquare,
+} from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [selectedPkg, setSelectedPkg] = useState<any>(null);
+  const [showForm, setShowForm] = useState(false);
+
+  // Show form on page load
+  useEffect(() => {
+    setShowForm(true);
+  }, []);
+
+  // Web3Forms submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: "f3b8a9c1-2d4e-5f6g-7h8i-9j0k1l2m3n4o", // Your Real Web3Forms Key
+          subject: "New Package Inquiry - FBDTravels",
+          from_name: formData.get("name"),
+          replyto: formData.get("email"),
+          message: `
+            Name: ${formData.get("name")}
+            Email: ${formData.get("email")}
+            Phone: ${formData.get("phone")}
+            Package: ${formData.get("destination")}
+            Travel Dates: ${formData.get("dates")}
+            Message: ${formData.get("message") || "None"}
+          `.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        alert("Thank you! Your inquiry has been sent. We'll call you with pricing.");
+        setShowForm(false);
+        form.reset();
+      } else {
+        alert("Failed to send. Please try again.");
+      }
+    } catch (error) {
+      alert("Network error. Please check your connection.");
+    }
+  };
+
+  // All 5 Locations
+  const locations = [
+    { name: "India – Taj Mahal", flag: "IN" },
+    { name: "Dubai", flag: "AE" },
+    { name: "Thailand", flag: "TH" },
+    { name: "Lakshadweep", flag: "Island" },
+    { name: "Maldives", flag: "MV" },
+  ];
+
+  // 6 Packages — Each available in ALL 5 locations
+  const specialPackages = [
+    {
+      id: 1,
+      title: "Romantic Package",
+      icon: Heart,
+      locations,
+      desc: "Experience eternal love with candlelight dinner, private heritage walk, luxury suite, and champagne sunset.",
+      duration: "4 Days / 3 Nights",
+      img: "/packages/romantic-taj-mahal.jpg",
+    },
+    {
+      id: 2,
+      title: "Family Package",
+      icon: Users,
+      locations,
+      desc: "Desert safari, waterpark, Burj Khalifa tour, private villa with kids club and nanny service.",
+      duration: "6 Days / 5 Nights",
+      img: "/packages/family-dubai.jpg",
+    },
+    {
+      id: 3,
+      title: "Corporate Package",
+      icon: Briefcase,
+      locations,
+      desc: "Beachfront boardroom, team-building yoga, private villa meetings, 5-star resort with WiFi & catering.",
+      duration: "5 Days / 4 Nights",
+      img: "\packages\corporate-bali.jpg",
+    },
+    {
+      id: 4,
+      title: "Vlogging Package",
+      icon: Camera,
+      locations,
+      desc: "Drone-friendly islands, street food tours, influencer suite, professional photographer, viral content spots.",
+      duration: "7 Days / 6 Nights",
+      img: "/packages/vlog-thailand.jpg",
+    },
+    {
+      id: 5,
+      title: "Honeymoon Package",
+      icon: Moon,
+      locations,
+      desc: "Private coral island villa, sunset cruise, couple spa, romantic beach dinner, underwater photoshoot.",
+      duration: "5 Days / 4 Nights",
+      img: "/packages/honeymoon-lakshadweep.jpg",
+    },
+    {
+      id: 6,
+      title: "Solo Package",
+      icon: User,
+      locations,
+      desc: "Overwater bungalow, scuba diving, personal concierge, wellness yoga, private island hopping.",
+      duration: "6 Days / 5 Nights",
+      img: "/packages/solo-maldives.jpg",
+    },
+  ];
+
   return (
     <>
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* ====================== ENQUIRY POPUP FORM (COMPACT & RESPONSIVE) ====================== */}
+      {showForm && (
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/hero.jpg')",
-            backgroundAttachment: "fixed",
-          }}
+          className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={() => setShowForm(false)}
         >
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
+          <div
+            className="bg-white rounded-2xl max-w-md w-full my-8 overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-xl font-bold text-gray-900">Get Pricing</h3>
+              <button
+                onClick={() => setShowForm(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-        <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance leading-tight">
-            Your Journey to <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Luxury</span> Begins Here
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto">
-            <strong className="text-primary">FBDTravels</strong> — Where Dreams Meet Destinations
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/booking"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-primary/70 text-foreground font-bold rounded-lg hover:shadow-2xl hover:shadow-primary/40 transition-all duration-300 transform hover:scale-105"
-            >
-              Book Your Dream Trip
-              <ArrowRight size={22} />
-            </Link>
-            <Link
-              href="/packages"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary transition-all"
-            >
-              Explore Packages
-            </Link>
+            <div className="p-4 md:p-6">
+              {/* Image on mobile */}
+              <div className="md:hidden mb-4">
+                <img
+                  src="/hero.jpg"
+                  alt="Luxury travel"
+                  className="w-full h-32 object-cover rounded-lg"
+                />
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                    <User className="w-3 h-3" /> Name
+                  </label>
+                  <input
+                    name="name"
+                    type="text"
+                    required
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                    <Mail className="w-3 h-3" /> Email
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="you@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                    <Phone className="w-3 h-3" /> Phone
+                  </label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    required
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="+91 98765 43210"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                    <MapPin className="w-3 h-3" /> Package & Location
+                  </label>
+                  <select
+                    name="destination"
+                    required
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  >
+                    <option value="">Select Package + Location</option>
+                    {specialPackages.map((pkg) =>
+                      pkg.locations.map((loc) => (
+                        <option key={`${pkg.id}-${loc.name}`} value={`${pkg.title} - ${loc.name}`}>
+                          {pkg.title} - {loc.flag} {loc.name}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                    <Calendar className="w-3 h-3" /> Travel Dates
+                  </label>
+                  <input
+                    name="dates"
+                    type="text"
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="15 Dec – 22 Dec"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                    <MessageSquare className="w-3 h-3" /> Message (Optional)
+                  </label>
+                  <textarea
+                    name="message"
+                    rows={2}
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Any special requests?"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm bg-gradient-to-r from-primary to-primary/70 text-white font-bold rounded-lg hover:shadow-lg transition-all"
+                >
+                  Enquire Now
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======== HERO SECTION ======== */}
+      <section className="bg-orange-50 py-20 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-center">
+            <div className="order-2 md:order-1">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight mb-6">
+                Your Journey to{" "}
+                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  Luxury
+                </span>{" "}
+                Begins Here
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-700 mb-8">
+                <strong className="text-primary">FBDTravels</strong> — Where Dreams Meet Destinations
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-primary/70 text-white font-bold rounded-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Enquire Now
+                  <ArrowRight size={22} />
+                </button>
+                <Link
+                  href="/packages"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-gray-800 text-gray-800 font-semibold rounded-lg hover:bg-gray-800 hover:text-white transition-all"
+                >
+                  View All Packages
+                </Link>
+              </div>
+
+              <div className="mt-12 flex items-center gap-6">
+                <div className="flex -space-x-3">
+                  {[
+                    "https://prayagtandon.github.io/Omnifood-Project/Hero-section/img/customers/customer-1.jpg",
+                    "https://prayagtandon.github.io/Omnifood-Project/Hero-section/img/customers/customer-2.jpg",
+                    "https://prayagtandon.github.io/Omnifood-Project/Hero-section/img/customers/customer-3.jpg",
+                    "https://prayagtandon.github.io/Omnifood-Project/Hero-section/img/customers/customer-4.jpg",
+                    "https://prayagtandon.github.io/Omnifood-Project/Hero-section/img/customers/customer-5.jpg",
+                    "https://prayagtandon.github.io/Omnifood-Project/Hero-section/img/customers/customer-6.jpg",
+                  ].map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt={`Happy traveler ${i + 1}`}
+                      className="w-12 h-12 rounded-full border-4 border-orange-50 object-cover shadow-sm"
+                    />
+                  ))}
+                </div>
+                <p className="text-lg font-semibold text-gray-800">
+                  <span className="text-primary">250,000+</span> dream trips delivered!
+                </p>
+              </div>
+            </div>
+
+            <div className="order-1 md:order-2">
+              <img
+                src="/hero.jpg"
+                alt="Luxury travel experience"
+                className="w-full h-auto rounded-2xl shadow-2xl object-cover max-h-96 lg:max-h-full"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Marquee Slogans */}
+      {/* ======== SPECIAL PACKAGES SECTION ======== */}
+      <section className="py-20 bg-gradient-to-b from-orange-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              Choose Your Experience
+            </h2>
+            <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
+              All packages available in <strong>India, Dubai, Thailand, Lakshadweep & Maldives</strong> — <strong>Enquire on Call</strong>
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {specialPackages.map((pkg) => {
+              const Icon = pkg.icon;
+              return (
+                <div
+                  key={pkg.id}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-primary/10 hover:border-primary/30 transform hover:-translate-y-2"
+                >
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={pkg.img}
+                      alt={pkg.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => (e.currentTarget.src = "/hero.jpg")}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <div className="absolute top-4 left-4 flex items-center gap-1 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} size={14} fill="#f59e0b" className="text-amber-500" />
+                      ))}
+                      <span className="ml-1 text-xs font-bold text-gray-800">Google</span>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Icon className="w-5 h-5 text-primary" />
+                      <h3 className="text-xl font-bold text-gray-900">{pkg.title}</h3>
+                    </div>
+
+                    <p className="text-sm text-foreground/70 line-clamp-2 mb-4">{pkg.desc}</p>
+
+                    <div className="flex items-center justify-between text-sm font-medium mb-4">
+                      <span className="text-primary">{pkg.duration}</span>
+                      <span className="text-lg font-bold text-primary">Enquire on Call</span>
+                    </div>
+
+                    {/* Location Pills */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {pkg.locations.map((loc) => (
+                        <span
+                          key={loc.name}
+                          className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {loc.flag} {loc.name}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setSelectedPkg(pkg)}
+                        className="flex-1 flex items-center justify-center gap-1 px-4 py-2 border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white transition-all text-sm"
+                      >
+                        Read More
+                      </button>
+                      <button
+                        onClick={() => setShowForm(true)}
+                        className="flex-1 flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-primary to-primary/70 text-white font-medium rounded-lg hover:shadow-lg transition-all text-sm"
+                      >
+                        Enquire Now
+                        <ArrowRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ======== READ MORE MODAL ======== */}
+      {selectedPkg && (
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={() => setSelectedPkg(null)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-3xl w-full my-8 max-h-screen overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-gray-900">{selectedPkg.title}</h3>
+              <button
+                onClick={() => setSelectedPkg(null)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <img
+                src={selectedPkg.img}
+                alt={selectedPkg.title}
+                className="w-full h-72 object-cover rounded-xl mb-6 shadow-lg"
+                onError={(e) => (e.currentTarget.src = "/hero.jpg")}
+              />
+
+              <div className="flex items-center gap-2 mb-4">
+                {(() => {
+                  const Icon = selectedPkg.icon;
+                  return <Icon className="w-6 h-6 text-primary" />;
+                })()}
+                <p className="text-lg font-semibold text-primary">Available in 5 Locations</p>
+              </div>
+
+              <p className="text-foreground/80 mb-6 leading-relaxed">{selectedPkg.desc}</p>
+
+              <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                <div className="bg-primary/5 p-4 rounded-lg">
+                  <p className="text-xs text-foreground/60">Duration</p>
+                  <p className="font-semibold text-gray-900">{selectedPkg.duration}</p>
+                </div>
+                <div className="bg-primary/5 p-4 rounded-lg">
+                  <p className="text-xs text-foreground/60">Price</p>
+                  <p className="font-bold text-xl text-primary">Enquire on Call</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 mb-6">
+                {selectedPkg.locations.map((loc: any) => (
+                  <span
+                    key={loc.name}
+                    className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1"
+                  >
+                    {loc.flag} {loc.name}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="flex-1 text-center px-6 py-3 bg-gradient-to-r from-primary to-primary/70 text-white font-bold rounded-lg hover:shadow-xl transition-all"
+                >
+                  Enquire Now
+                </button>
+                <button
+                  onClick={() => setSelectedPkg(null)}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======== MARQUEE SLOGANS ======== */}
       <Marquee>
-        <span className="text-primary font-bold">Luxury Redefined</span> • 
-        <span className="text-primary/80"> 5-Star Service</span> • 
-        <span className="text-primary/70"> Exclusive Deals</span> • 
-        <span className="text-primary"> Unforgettable Memories</span> • 
-        <span className="text-primary/80"> Book Now & Save Big</span>
+        <span className="text-primary font-bold">Luxury Redefined</span> •
+        <span className="text-primary/80"> 5-Star Service</span> •
+        <span className="text-primary/70"> All 5 Locations</span> •
+        <span className="text-primary"> Enquire on Call</span>
       </Marquee>
 
-      {/* Why Choose Us */}
+      {/* ======== WHY CHOOSE US ======== */}
       <section className="py-20 bg-gradient-to-b from-white to-primary/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Why Travel with FBDTravels?
+              Why FBDTravels?
             </h2>
-            <p className="text-lg text-foreground/70">We don’t just plan trips — we craft <strong>legends</strong></p>
+            <p className="text-lg text-foreground/70">
+              We craft <strong>legends</strong>, not just trips.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: Award, title: "Award-Winning Excellence", desc: "Voted #1 Luxury Travel Agency 2024" },
-              { icon: Shield, title: "100% Secure Booking", desc: "SSL Encrypted • Refund Guarantee" },
-              { icon: Star, title: "VIP Concierge", desc: "24/7 Personal Travel Assistant" },
-              { icon: Plane, title: "Private Transfers", desc: "Chauffeur-Driven Luxury Cars" },
-              { icon: Users, title: "Expert Curated", desc: "Handpicked by Travel Connoisseurs" },
-              { icon: Clock, title: "Instant Confirmation", desc: "Book in 60 Seconds or Less" },
+              { icon: Award, title: "Award-Winning", desc: "#1 Luxury Agency 2024" },
+              { icon: Shield, title: "100% Secure", desc: "SSL • Refund Guarantee" },
+              { icon: Star, title: "VIP Concierge", desc: "24/7 Assistant" },
+              { icon: Plane, title: "Private Transfers", desc: "Luxury Cars" },
+              { icon: Users, title: "Expert Curated", desc: "Handpicked by Pros" },
+              { icon: Clock, title: "Instant Booking", desc: "60 Seconds or Less" },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
@@ -95,7 +550,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works - Step-by-Step */}
+      {/* ======== HOW IT WORKS ======== */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -108,13 +563,13 @@ export default function Home() {
               {
                 step: "01",
                 title: "Tell Us Your Dream",
-                desc: "Share your travel style, budget, and preferences",
+                desc: "Share your travel style, package, and preferred location",
                 color: "from-primary to-primary/70",
               },
               {
                 step: "02",
-                title: "Get Custom Itinerary",
-                desc: "Receive a tailored luxury plan within 24 hours",
+                title: "Get Custom Quote",
+                desc: "Receive personalized pricing within 2 hours",
                 color: "from-primary/80 to-primary/50",
               },
               {
@@ -124,10 +579,7 @@ export default function Home() {
                 color: "from-primary/60 to-primary/40",
               },
             ].map((s, i) => (
-              <div
-                key={i}
-                className="relative group text-center"
-              >
+              <div key={i} className="relative group text-center">
                 <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl blur-xl"
                   style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))` }}
                 />
@@ -147,36 +599,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Packages */}
+      {/* ======== FEATURED PACKAGES ======== */}
       <section className="py-20 bg-gradient-to-b from-primary/5 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Luxury Packages</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Experiences</h2>
             <p className="text-lg text-foreground/70">Handpicked for the discerning traveler</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Dubai Royal Escape",
-                price: "From $4,999",
-                image: "/luxury-dubai-resort-pool.jpg",
-                tag: "Most Popular",
+                title: "Romantic Package – Maldives",
+                img: "/maldives-overwater-bungalow-tropical-island.jpg",
+                tag: "Most Romantic",
                 duration: "5 Days",
               },
               {
-                title: "Maldives Overwater Villa",
-                price: "From $6,799",
-                image: "/maldives-overwater-bungalow-tropical-island.jpg",
-                tag: "Honeymoon Special",
-                duration: "7 Days",
+                title: "Family Package – Dubai",
+                img: "/luxury-dubai-resort-pool.jpg",
+                tag: "Family Favorite",
+                duration: "6 Days",
               },
               {
-                title: "Swiss Alps Private Chalet",
-                price: "From $8,999",
-                image: "/swiss-alps-mountains-skiing-snow.jpg",
-                tag: "Winter Exclusive",
-                duration: "6 Days",
+                title: "Honeymoon Package – Lakshadweep",
+                img: "/packages/honeymoon-package.jpg",
+                tag: "Honeymoon Special",
+                duration: "5 Days",
               },
             ].map((pkg, i) => (
               <div
@@ -185,9 +634,10 @@ export default function Home() {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img
-                    src={pkg.image}
+                    src={pkg.img}
                     alt={pkg.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => (e.currentTarget.src = "/hero.jpg")}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   {pkg.tag && (
@@ -201,15 +651,13 @@ export default function Home() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold mb-2">{pkg.title}</h3>
-                  <p className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent mb-4">
-                    {pkg.price}
-                  </p>
-                  <Link
-                    href="/booking"
-                    className="w-full block text-center px-6 py-3 bg-gradient-to-r from-primary to-primary/70 text-foreground font-bold rounded-lg hover:shadow-lg transition-all"
+                  <p className="text-3xl font-bold text-primary mb-4">Enquire on Call</p>
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="w-full block text-center px-6 py-3 bg-gradient-to-r from-primary to-primary/70 text-white font-bold rounded-lg hover:shadow-lg transition-all"
                   >
-                    Book Now
-                  </Link>
+                    Enquire Now
+                  </button>
                 </div>
               </div>
             ))}
@@ -220,14 +668,14 @@ export default function Home() {
               href="/packages"
               className="inline-flex items-center gap-2 px-8 py-4 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all text-lg"
             >
-              View All 50+ Packages
+              View All 30+ Combinations
               <ArrowRight size={22} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Trust Badges */}
+      {/* ======== TRUST BADGES ======== */}
       <section className="py-16 bg-primary/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -251,22 +699,22 @@ export default function Home() {
 
       <Testimonials />
 
-      {/* Final CTA */}
+      {/* ======== FINAL CTA ======== */}
       <section className="py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
             Ready for Your Next Adventure?
           </h2>
           <p className="text-xl mb-8 text-white/90">
-            Limited spots available for 2025 luxury departures
+            Limited spots for 2025 luxury departures — Enquire Now!
           </p>
-          <Link
-            href="/booking"
+          <button
+            onClick={() => setShowForm(true)}
             className="inline-flex items-center gap-3 px-10 py-5 bg-white text-primary font-bold text-lg rounded-xl hover:shadow-2xl hover:shadow-white/30 transition-all transform hover:scale-105"
           >
-            Get Your Free Quote Now
+            Enquire Now
             <ArrowRight size={24} />
-          </Link>
+          </button>
         </div>
       </section>
 
