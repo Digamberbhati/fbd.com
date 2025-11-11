@@ -48,7 +48,7 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          access_key: "f3b8a9c1-2d4e-5f6g-7h8i-9j0k1l2m3n4o", // Your Real Web3Forms Key
+          access_key: "f3b8a9c1-2d4e-5f6g-7h8i-9j0k1l2m3n4o",
           subject: "New Package Inquiry - FBDTravels",
           from_name: formData.get("name"),
           replyto: formData.get("email"),
@@ -75,7 +75,6 @@ export default function Home() {
     }
   };
 
-  // All 5 Locations
   const locations = [
     { name: "India – Taj Mahal", flag: "IN" },
     { name: "Dubai", flag: "AE" },
@@ -84,7 +83,6 @@ export default function Home() {
     { name: "Maldives", flag: "MV" },
   ];
 
-  // 6 Packages — Each available in ALL 5 locations
   const specialPackages = [
     {
       id: 1,
@@ -146,86 +144,92 @@ export default function Home() {
     <>
       <Header />
 
-      {/* ====================== ENQUIRY POPUP FORM (COMPACT & RESPONSIVE) ====================== */}
+      {/* ====================== ULTRA COMPACT ENQUIRY POPUP ====================== */}
       {showForm && (
         <div
-          className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 overflow-y-auto"
+          className="fixed inset-0 bg-black/70 flex items-center justify-center p-3 z-50"
           onClick={() => setShowForm(false)}
         >
           <div
-            className="bg-white rounded-2xl max-w-md w-full my-8 overflow-hidden shadow-2xl"
+            className="bg-white rounded-xl w-full max-w-xs shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-xl font-bold text-gray-900">Get Pricing</h3>
+            {/* Header */}
+            <div className="flex justify-between items-center p-2.5 border-b bg-gradient-to-r from-primary/5 to-primary/10">
+              <h3 className="text-base font-bold text-gray-900">Get Pricing</h3>
               <button
                 onClick={() => setShowForm(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-4 md:p-6">
-              {/* Image on mobile */}
-              <div className="md:hidden mb-4">
+            {/* Body */}
+            <div className="p-3 max-h-[75vh] overflow-y-auto">
+              {/* Mobile Image */}
+              <div className="md:hidden mb-2">
                 <img
                   src="/hero.jpg"
-                  alt="Luxury travel"
-                  className="w-full h-32 object-cover rounded-lg"
+                  alt="Luxury"
+                  className="w-full h-24 object-cover rounded-md"
                 />
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-2.5 text-xs">
+                {/* Name */}
                 <div>
-                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                  <label className="flex items-center gap-1.5 font-medium text-gray-700">
                     <User className="w-3 h-3" /> Name
                   </label>
                   <input
                     name="name"
                     type="text"
                     required
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="mt-0.5 w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-primary focus:border-primary"
                     placeholder="John Doe"
                   />
                 </div>
 
+                {/* Email */}
                 <div>
-                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                  <label className="flex items-center gap-1.5 font-medium text-gray-700">
                     <Mail className="w-3 h-3" /> Email
                   </label>
                   <input
                     name="email"
                     type="email"
                     required
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="mt-0.5 w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-primary focus:border-primary"
                     placeholder="you@example.com"
                   />
                 </div>
 
+                {/* Phone */}
                 <div>
-                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                  <label className="flex items-center gap-1.5 font-medium text-gray-700">
                     <Phone className="w-3 h-3" /> Phone
                   </label>
                   <input
                     name="phone"
                     type="tel"
                     required
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="mt-0.5 w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-primary focus:border-primary"
                     placeholder="+91 98765 43210"
                   />
                 </div>
 
+                {/* Package */}
                 <div>
-                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
-                    <MapPin className="w-3 h-3" /> Package & Location
+                  <label className="flex items-center gap-1.5 font-medium text-gray-700">
+                    <MapPin className="w-3 h-3" /> Package
                   </label>
                   <select
                     name="destination"
                     required
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="mt-0.5 w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-primary focus:border-primary"
                   >
-                    <option value="">Select Package + Location</option>
+                    <option value="">Select</option>
                     {specialPackages.map((pkg) =>
                       pkg.locations.map((loc) => (
                         <option key={`${pkg.id}-${loc.name}`} value={`${pkg.title} - ${loc.name}`}>
@@ -236,36 +240,39 @@ export default function Home() {
                   </select>
                 </div>
 
+                {/* Dates */}
                 <div>
-                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
-                    <Calendar className="w-3 h-3" /> Travel Dates
+                  <label className="flex items-center gap-1.5 font-medium text-gray-700">
+                    <Calendar className="w-3 h-3" /> Dates
                   </label>
                   <input
                     name="dates"
                     type="text"
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="15 Dec – 22 Dec"
+                    className="mt-0.5 w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-primary focus:border-primary"
+                    placeholder="15-22 Dec"
                   />
                 </div>
 
+                {/* Message */}
                 <div>
-                  <label className="flex items-center gap-2 text-xs font-medium text-gray-700">
-                    <MessageSquare className="w-3 h-3" /> Message (Optional)
+                  <label className="flex items-center gap-1.5 font-medium text-gray-700">
+                    <MessageSquare className="w-3 h-3" /> Message
                   </label>
                   <textarea
                     name="message"
-                    rows={2}
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Any special requests?"
+                    rows={1}
+                    className="mt-0.5 w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-primary focus:border-primary resize-none"
+                    placeholder="Optional"
                   />
                 </div>
 
+                {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm bg-gradient-to-r from-primary to-primary/70 text-white font-bold rounded-lg hover:shadow-lg transition-all"
+                  className="w-full mt-3 py-2 text-sm font-bold text-white bg-gradient-to-r from-primary to-primary/80 rounded-md hover:shadow-md transition-all flex items-center justify-center gap-1.5"
                 >
                   Enquire Now
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </form>
             </div>
@@ -389,7 +396,6 @@ export default function Home() {
                       <span className="text-lg font-bold text-primary">Enquire on Call</span>
                     </div>
 
-                    {/* Location Pills */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       {pkg.locations.map((loc) => (
                         <span
@@ -503,7 +509,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* ======== MARQUEE SLOGANS ======== */}
       <Marquee>
         <span className="text-primary font-bold">Luxury Redefined</span> •
         <span className="text-primary/80"> 5-Star Service</span> •
