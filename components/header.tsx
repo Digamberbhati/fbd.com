@@ -14,6 +14,7 @@ export function Header() {
     { href: "/packages", label: "Packages" },
     { href: "/contact", label: "Contact" },
     { href: "/booking", label: "Booking" },
+    { href: "/Coprabrate", label: "Coprabrate" },
   ];
 
   return (

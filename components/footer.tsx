@@ -16,7 +16,7 @@ export function Footer() {
             </h3>
             <p className="text-white/70">Creating unforgettable travel experiences since 2020.</p>
             <div className="mt-4 space-y-2 text-sm text-white/70">
-              <p>📞 +91 7217649995</p>
+              <p>📞 +91 9588160069</p>
               <p>📧 info@fbdtravels.com</p>
               <p className="text-xs mt-3">3rd Floor, Krishna Palace, Faridabad, Haryana 121001</p>
             </div>
